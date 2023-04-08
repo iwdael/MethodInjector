@@ -8,7 +8,8 @@ import org.gradle.api.Project
  * @project : https://github.com/iwdael/MethodInjector
  */
 open class Properties constructor(project: Project?) {
-    var classNameMatches: List<String> = listOf()
+    var classMatcher: String = ""
+    var methodMatcher: String = "^(?!.*<init>)(?!.*<clinit>).*\$"
     var tagChain: String = "method-injector"
     var tagCast: String = "method-injector"
     var levelChain: String = "debug"

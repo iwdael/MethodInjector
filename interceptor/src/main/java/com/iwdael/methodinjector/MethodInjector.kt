@@ -21,9 +21,11 @@ class MethodInjector : Plugin<Project> {
         androidExtension.onVariants(androidExtension.selector().all()) { variant ->
             val properties = project.extensions.findByType(Properties::class.java) ?: Properties(null)
             Logger.debug = properties.debug
-            Logger.log("classNameMatches:${properties.classNameMatches}")
+            Logger.log("classMatcher:${properties.classMatcher}")
+            Logger.log("methodMatcher:${properties.methodMatcher}")
             variant.instrumentation.transformClassesWith(AsmClassFactory::class.java, InstrumentationScope.PROJECT) { params ->
-                params.classNameMatches.set(properties.classNameMatches)
+                params.classMatcher.set(properties.classMatcher)
+                params.methodMatcher.set(properties.methodMatcher)
                 params.tagChain.set(properties.tagChain)
                 params.levelChain.set(properties.levelChain)
                 params.tagCast.set(properties.tagCast)

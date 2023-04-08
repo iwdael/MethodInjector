@@ -7,7 +7,11 @@ plugins {
 
 methodInjector {
     debug = true
-    classNameMatches = ["com\\.iwdael(.*)"]
+    classMatcher = "com\\.iwdael(.*)"
+    tagChain = "chain-inject"
+    tagCast = "cast-inject"
+    levelChain = "ERROR"
+    levelCast = "WARN"
 }
 
 android {

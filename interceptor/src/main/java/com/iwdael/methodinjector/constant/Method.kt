@@ -8,8 +8,14 @@ import org.objectweb.asm.Type
  * @project : https://github.com/iwdael/MethodInjector
  */
 object Method {
-    const val android_util_log = "android/util/Log"
-    val exclude: List<String> = listOf("<init>", "<clinit>")
+
+    const val C_APPEND = "append"
+    const val C_CURRENT_THREAD = "currentThread"
+    const val C_GET_NAME = "getName"
+    const val C_HASH_CODE = "hashCode"
+    const val C_TO_STRING = "toString"
+    const val C_INIT = "<init>"
+    const val C_CURRENT_TIME_MILLIS = "currentTimeMillis"
 
     object TYPE {
         val OBJECT: Type = Type.getType(Any::class.java)

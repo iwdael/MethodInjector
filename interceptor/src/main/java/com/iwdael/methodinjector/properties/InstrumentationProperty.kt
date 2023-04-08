@@ -2,7 +2,6 @@ package com.iwdael.methodinjector.properties
 
 import com.android.build.api.instrumentation.InstrumentationParameters
 import groovy.transform.Internal
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 
@@ -15,7 +14,11 @@ import org.gradle.api.tasks.Input
 interface InstrumentationProperty : InstrumentationParameters {
     @get:Internal
     @get:Input
-    val classNameMatches: ListProperty<String>
+    val classMatcher: Property<String>
+
+    @get:Internal
+    @get:Input
+    val methodMatcher: Property<String>
 
     @get:Internal
     @get:Input
@@ -40,7 +43,6 @@ interface InstrumentationProperty : InstrumentationParameters {
     @get:Internal
     @get:Input
     val enableCast: Property<Boolean>
-
 
 
 }

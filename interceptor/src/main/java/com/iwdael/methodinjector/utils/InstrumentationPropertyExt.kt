@@ -12,7 +12,8 @@ import com.iwdael.methodinjector.properties.Properties
 
 fun InstrumentationProperty.toProperty(): Properties {
     val properties = Properties(null)
-    properties.classNameMatches = classNameMatches.get()
+    properties.classMatcher = classMatcher.get()
+    properties.methodMatcher = methodMatcher.get()
     properties.tagChain = tagChain.get()
     properties.tagCast = tagCast.get()
     properties.enableChain = enableChain.get()

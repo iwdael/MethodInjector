@@ -20,6 +20,7 @@ abstract class AsmClassFactory : AsmClassVisitorFactory<InstrumentationProperty>
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {
-        return parameters.get().classNameMatches.get().any { classData.className.matches(Regex(it)) }
+        if (parameters.get().classMatcher.get().isEmpty()) return false
+        return classData.className.matches(Regex(parameters.get().classMatcher.get()))
     }
 }
