@@ -1,0 +1,10 @@
+apply plugin: "com.iwdael.methodinjector"
+
+methodInjector {
+    debug = true
+    classMatcher = "com\\.iwdael(.*)"
+    tagChain = "chain-inject"
+    tagCast = "cast-inject"
+    levelChain = "ERROR"
+    levelCast = "WARN"
+}

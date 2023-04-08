@@ -21,6 +21,7 @@ open class Injector(classContext: ClassContext, api: Int, methodVisitor: MethodV
     val parameterNames = arrayOfNulls<String>(argumentTypes.size)
     val isStatic = (access and ACC_STATIC) == 0
     var lineNumber = 0
+    val descriptor = "${name}${methodDesc}"
     private var isReceivedLineNumber = false
 
     override fun visitLineNumber(line: Int, start: Label?) {

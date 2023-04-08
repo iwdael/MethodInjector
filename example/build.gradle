@@ -1,18 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.iwdael.methodinjector'
 }
 
+//apply from: './../plugin.gradle'
 
-methodInjector {
-    debug = true
-    classMatcher = "com\\.iwdael(.*)"
-    tagChain = "chain-inject"
-    tagCast = "cast-inject"
-    levelChain = "ERROR"
-    levelCast = "WARN"
-}
 
 android {
     namespace 'com.iwdael.methodinjector.example'

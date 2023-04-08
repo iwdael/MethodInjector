@@ -25,7 +25,7 @@ class ChainInjector constructor(classContext: ClassContext, api: Int, visitor: M
 
     override fun onMethodEnter2() {
         if (!properties.enableChain) return
-        if (properties.methodMatcher.isNotEmpty() && !name.matches(Regex(properties.methodMatcher))) return
+        if (properties.methodMatcher.isNotEmpty() && !descriptor.matches(Regex(properties.methodMatcher))) return
         mv.visitLabel(Label())
         mv.visitLdcInsn(properties.tagChain)
         mv.visitTypeInsn(NEW, C_STRING_BUILDER)

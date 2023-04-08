@@ -1,5 +1,7 @@
 package com.iwdael.methodinjector.example;
 
+import android.util.Log;
+
 /**
  * @author : iwdael
  * @mail : iwdael@outlook.com
@@ -7,7 +9,8 @@ package com.iwdael.methodinjector.example;
  */
 public class MethodStatic {
 
-    public static void call1234(String apple, int banner) {
+    public static int call1234(int apple, int banner) {
+        return apple + banner;
     }
 
     public static void call4321(String apple, int banner) {
