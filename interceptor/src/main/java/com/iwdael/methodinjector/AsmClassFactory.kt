@@ -5,6 +5,7 @@ import com.android.build.api.instrumentation.ClassContext
 import com.android.build.api.instrumentation.ClassData
 import com.iwdael.methodinjector.properties.InstrumentationProperty
 import com.iwdael.methodinjector.utils.Logger
+import com.iwdael.methodinjector.utils.toProperty
 import org.objectweb.asm.ClassVisitor
 
 /**
@@ -15,7 +16,7 @@ import org.objectweb.asm.ClassVisitor
 abstract class AsmClassFactory : AsmClassVisitorFactory<InstrumentationProperty> {
     override fun createClassVisitor(context: ClassContext, visitor: ClassVisitor): ClassVisitor {
         Logger.log("transform:${context.currentClassData.className}")
-        return InjectClassVisitor(context, visitor)
+        return InjectClassVisitor(context, visitor, parameters.get().toProperty())
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {

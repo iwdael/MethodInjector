@@ -9,7 +9,6 @@ import org.objectweb.asm.Type
  */
 object Method {
     const val android_util_log = "android/util/Log"
-    const val debug = "d"
     val exclude: List<String> = listOf("<init>", "<clinit>")
 
     object TYPE {

@@ -1,14 +1,14 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-//    id 'com.iwdael.methodinjector'
+    id 'com.iwdael.methodinjector'
 }
 
 
-//methodInjector {
-//    debug = true
-//    classNameMatches = ["com\\.iwdael(.*)"]
-//}
+methodInjector {
+    debug = true
+    classNameMatches = ["com\\.iwdael(.*)"]
+}
 
 android {
     namespace 'com.iwdael.methodinjector.example'

@@ -2,6 +2,7 @@ package com.iwdael.methodinjector.injector
 
 import com.android.build.api.instrumentation.ClassContext
 import com.iwdael.methodinjector.constant.Method
+import com.iwdael.methodinjector.properties.Properties
 import com.iwdael.methodinjector.utils.Logger
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
@@ -14,7 +15,7 @@ import org.objectweb.asm.commons.AdviceAdapter
  * @mail    : iwdael@outlook.com
  * @project : https://github.com/iwdael/MethodInjector
  */
-open class Injector(classContext: ClassContext, api: Int, methodVisitor: MethodVisitor?, access: Int, name: String?, descriptor: String?) : AdviceAdapter(api, methodVisitor, access, name, descriptor) {
+open class Injector(classContext: ClassContext, api: Int, methodVisitor: MethodVisitor?, access: Int, name: String?, descriptor: String?,val properties: Properties) : AdviceAdapter(api, methodVisitor, access, name, descriptor) {
     val className = classContext.currentClassData.className
     val simpleName = className.substring(className.lastIndexOf(".") + 1)
     val parameterNames = arrayOfNulls<String>(argumentTypes.size)
