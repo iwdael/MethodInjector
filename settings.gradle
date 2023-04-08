@@ -3,12 +3,10 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-//        maven {
-//            url 'https://jitpack.io'
+//        flatDir {
+//            dirs './repo/com/iwdael/methodinjector/0.0.1/'
 //        }
-        flatDir{
-            dirs './repo/com/iwdael/methodinjector/0.0.1/'
-        }
+//        maven { url 'https://www.jitpack.io' }
     }
 }
 dependencyResolutionManagement {

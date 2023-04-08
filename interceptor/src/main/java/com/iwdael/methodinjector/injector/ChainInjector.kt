@@ -14,6 +14,7 @@ import com.iwdael.methodinjector.constant.Method.C_TO_STRING
 import com.iwdael.methodinjector.properties.Properties
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
+import java.io.File
 
 
 /**
@@ -21,11 +22,11 @@ import org.objectweb.asm.MethodVisitor
  * @mail : iwdael@outlook.com
  * @project : https://github.com/iwdael/MethodInjector
  */
-class ChainInjector constructor(classContext: ClassContext, api: Int, visitor: MethodVisitor, access: Int, name: String?, descriptor: String?, properties: Properties) : Injector(classContext, api, visitor, access, name, descriptor, properties) {
+class ChainInjector constructor(classContext: ClassContext, api: Int, visitor: MethodVisitor, access: Int, name: String?, descriptor: String?, properties: Properties, sourceFile: File?) : Injector(classContext, api, visitor, access, name, descriptor, properties, sourceFile) {
 
     override fun onMethodEnter2() {
         if (!properties.enableChain) return
-        if (properties.methodMatcher.isNotEmpty() && !name.matches(Regex(properties.methodMatcher))) return
+        if (properties.methodChainMatcher.isNotEmpty() && !descriptor.matches(Regex(properties.methodChainMatcher))) return
         mv.visitLabel(Label())
         mv.visitLdcInsn(properties.tagChain)
         mv.visitTypeInsn(NEW, C_STRING_BUILDER)
@@ -37,7 +38,7 @@ class ChainInjector constructor(classContext: ClassContext, api: Int, visitor: M
         mv.visitMethodInsn(INVOKEVIRTUAL, C_THREAD, C_GET_NAME, "()Ljava/lang/String;", false)
         mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
         if (argumentTypes.isEmpty()) mv.visitLdcInsn("] ${className}.${name}(${simpleName}.java:${lineNumber})")
-        else mv.visitLdcInsn("] ${className}.${name}(${simpleName}.java:${lineNumber}) arg0:")
+        else mv.visitLdcInsn("] ${className}.${name}(${simpleName}.${sourceExtension}:${lineNumber}) arg0:")
         mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
         argumentTypes.forEachIndexed { index, type ->
             if (index == 0) {

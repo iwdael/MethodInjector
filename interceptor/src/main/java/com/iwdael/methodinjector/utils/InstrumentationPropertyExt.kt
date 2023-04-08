@@ -1,7 +1,9 @@
 package com.iwdael.methodinjector.utils
 
+import com.android.build.api.instrumentation.ClassContext
 import com.iwdael.methodinjector.properties.InstrumentationProperty
 import com.iwdael.methodinjector.properties.Properties
+import java.io.File
 
 /**
  * @author  : iwdael
@@ -12,8 +14,11 @@ import com.iwdael.methodinjector.properties.Properties
 
 fun InstrumentationProperty.toProperty(): Properties {
     val properties = Properties(null)
-    properties.classMatcher = classMatcher.get()
-    properties.methodMatcher = methodMatcher.get()
+    properties.sourceDir = sourceDir.get()
+    properties.classChainMatcher = classChainMatcher.get()
+    properties.methodChainMatcher = methodChainMatcher.get()
+    properties.classCastMatcher = classCastMatcher.get()
+    properties.methodCastMatcher = methodCastMatcher.get()
     properties.tagChain = tagChain.get()
     properties.tagCast = tagCast.get()
     properties.enableChain = enableChain.get()
@@ -21,6 +26,25 @@ fun InstrumentationProperty.toProperty(): Properties {
     properties.levelChain = checkLevel(levelChain.get())
     properties.levelCast = checkLevel(levelCast.get())
     return properties
+}
+
+fun InstrumentationProperty.containJava(classContext: ClassContext): Boolean {
+    return sourceFiles.get().any { it.endsWith(classContext.currentClassData.className.replace(".", File.separator) + ".java") }
+}
+
+
+fun InstrumentationProperty.containKt(classContext: ClassContext): Boolean {
+    return sourceFiles.get().any { it.endsWith(classContext.currentClassData.className.replace(".", File.separator) + ".kt") }
+}
+
+fun InstrumentationProperty.findSourceFile(classContext: ClassContext): File? {
+    return sourceFiles.get()
+        .filter {
+            it.endsWith(classContext.currentClassData.className.replace(".", File.separator) + ".java") ||
+            it.endsWith(classContext.currentClassData.className.replace(".", File.separator) + ".kt")
+        }
+        .map { File(it) }
+        .firstOrNull()
 }
 
 private fun checkLevel(level: String): String {
