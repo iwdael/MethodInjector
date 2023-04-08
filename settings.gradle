@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+//        maven {
+//            url 'https://jitpack.io'
+//        }
+        flatDir{
+            dirs './repo/com/iwdael/methodinjector/0.0.1/'
+        }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "MethodInjector"
+include ':example'
+include ':interceptor'
