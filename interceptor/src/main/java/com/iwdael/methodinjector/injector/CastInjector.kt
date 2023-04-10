@@ -51,7 +51,7 @@ class CastInjector constructor(classContext: ClassContext, api: Int, visitor: Me
         if (isReturn) {
             mv.visitReturn(opcode, returnType)
             returnLocal = newLocal(returnType)
-            mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "valueOf", "(I)Ljava/lang/String;", false);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "valueOf", "(${getReturnStringValueOfDescriptor(returnType)})Ljava/lang/String;", false);
             mv.visitVarInsn(ASTORE, returnLocal)
         }
         mv.visitLabel(Label())
