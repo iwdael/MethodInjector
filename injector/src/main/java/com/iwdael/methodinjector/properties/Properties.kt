@@ -10,15 +10,15 @@ import java.io.File
  */
 open class Properties constructor(project: Project?) {
     var sourceDir: String = "src${File.separator}main${File.separator}"
-    var classChainMatcher: String = ""
-    var classCastMatcher: String = ""
+    var classMatcher: String = ""
     var methodChainMatcher: String = "^(?!.*<init>)(?!.*<clinit>).*\$"
-    var methodCastMatcher: String = "^(?!.*<init>)(?!.*<clinit>).*\$"
+    var methodCostMatcher: String = "^(?!.*<init>)(?!.*<clinit>).*\$"
     var tagChain: String = "method-injector"
-    var tagCast: String = "method-injector"
+    var tagCost: String = "method-injector"
     var levelChain: String = "debug"
-    var levelCast: String = "debug"
+    var levelCost: String = "debug"
     var enableChain = true
-    var enableCast = true
+    var enableCost = true
+    var useEnglish = true
     var debug: Boolean = false
 }

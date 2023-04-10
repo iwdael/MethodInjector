@@ -13,6 +13,8 @@ import com.iwdael.methodinjector.constant.Method.C_GET_NAME
 import com.iwdael.methodinjector.constant.Method.C_INIT
 import com.iwdael.methodinjector.constant.Method.C_TO_STRING
 import com.iwdael.methodinjector.properties.Properties
+import com.iwdael.methodinjector.utils.appendDescriptor
+import com.iwdael.methodinjector.utils.valueOfDescriptor
 import com.iwdael.methodinjector.utils.visitReturn
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
@@ -25,20 +27,21 @@ import java.io.File
  * @mail : iwdael@outlook.com
  * @project : https://github.com/iwdael/MethodInjector
  */
-class CastInjector constructor(classContext: ClassContext, api: Int, visitor: MethodVisitor, access: Int, name: String?, descriptor: String?, properties: Properties, sourceFile: File?) : Injector(classContext, api, visitor, access, name, descriptor, properties, sourceFile) {
+class CostInjector constructor(classContext: ClassContext, api: Int, visitor: MethodVisitor, access: Int, name: String?, descriptor: String?, properties: Properties, sourceFile: File?) : Injector(classContext, api, visitor, access, name, descriptor, properties, sourceFile) {
     private val currentTime = newLocal(LONG_TYPE)
     private val castTime = newLocal(LONG_TYPE)
-    override fun onMethodEnter2() {
-        if (!properties.enableCast) return
-        if (properties.methodCastMatcher.isNotEmpty() && !descriptor.matches(Regex(properties.methodCastMatcher))) return
+    override fun onMethodEnter() {
+        if (!properties.enableCost) return
+        if (properties.methodCostMatcher.isNotEmpty() && !descriptor.matches(Regex(properties.methodCostMatcher))) return
         mv.visitLabel(Label())
         mv.visitMethodInsn(INVOKESTATIC, C_SYSTEM, C_CURRENT_TIME_MILLIS, "()J", false)
         mv.visitVarInsn(LSTORE, currentTime)
     }
 
     override fun onMethodExit(opcode: Int) {
-        if (!properties.enableCast) return
-        if (properties.methodCastMatcher.isNotEmpty() && !descriptor.matches(Regex(properties.methodCastMatcher))) return
+        if (!properties.enableCost) return
+        if (properties.methodCostMatcher.isNotEmpty() && !descriptor.matches(Regex(properties.methodCostMatcher))) return
+
         val isReturn = opcode in IRETURN until RETURN
 
         mv.visitLabel(Label())
@@ -49,19 +52,19 @@ class CastInjector constructor(classContext: ClassContext, api: Int, visitor: Me
 
         var returnLocal = 0
         if (isReturn) {
-            mv.visitReturn(opcode, returnType)
+            visitReturn(opcode)
             returnLocal = newLocal(returnType)
-            mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "valueOf", "(${getReturnStringValueOfDescriptor(returnType)})Ljava/lang/String;", false);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "valueOf", "(${returnType.valueOfDescriptor})Ljava/lang/String;", false);
             mv.visitVarInsn(ASTORE, returnLocal)
         }
         mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCast)
+        mv.visitLdcInsn(properties.tagCost)
         mv.visitLdcInsn(Log.SQUARE_TOP)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
 
         mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCast)
+        mv.visitLdcInsn(properties.tagCost)
         mv.visitTypeInsn(NEW, C_STRING_BUILDER)
         mv.visitInsn(DUP)
         mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
@@ -71,33 +74,33 @@ class CastInjector constructor(classContext: ClassContext, api: Int, visitor: Me
         mv.visitMethodInsn(INVOKEVIRTUAL, C_THREAD, C_GET_NAME, "()Ljava/lang/String;", false)
         mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
         mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
 
         mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCast)
+        mv.visitLdcInsn(properties.tagCost)
         mv.visitLdcInsn(Log.SQUARE_MIDDLE)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
 
 
 
 
         mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCast)
-        mv.visitLdcInsn("${Log.SQUARE_LEFT} method    : ${className}.${name}(${simpleName}.${sourceExtension}:${lineNumber - 1})")
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitLdcInsn(properties.tagCost)
+        mv.visitLdcInsn("${Log.SQUARE_LEFT} method    : ${className}.${name}(${simpleName}.${sourceExtension}:${lineNumber})")
+        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
 
 
         mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCast)
+        mv.visitLdcInsn(properties.tagCost)
         mv.visitLdcInsn("${Log.SQUARE_LEFT} descriptor: $descriptor")
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
 
         mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCast)
+        mv.visitLdcInsn(properties.tagCost)
         mv.visitTypeInsn(NEW, C_STRING_BUILDER)
         mv.visitInsn(DUP)
         mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
@@ -108,26 +111,26 @@ class CastInjector constructor(classContext: ClassContext, api: Int, visitor: Me
         mv.visitLdcInsn("ms")
         mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
         mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
 
 
         argumentTypes.forEachIndexed { index, type ->
             mv.visitLabel(Label())
-            mv.visitLdcInsn(properties.tagCast)
+            mv.visitLdcInsn(properties.tagCost)
             mv.visitTypeInsn(NEW, C_STRING_BUILDER)
             mv.visitInsn(DUP)
             mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
             mv.visitLdcInsn("${Log.SQUARE_LEFT} arg ${String.format("%6d", index)}: ")
             mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
             loadArg(index)
-            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${getTypeDescriptor(type)})Ljava/lang/StringBuilder;", false)
+            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${type.appendDescriptor})Ljava/lang/StringBuilder;", false)
             mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
-            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
             mv.visitInsn(POP)
         }
         if (isReturn) {
-            mv.visitLdcInsn(properties.tagCast)
+            mv.visitLdcInsn(properties.tagCost)
             mv.visitTypeInsn(NEW, C_STRING_BUILDER)
             mv.visitInsn(DUP)
             mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
@@ -136,13 +139,13 @@ class CastInjector constructor(classContext: ClassContext, api: Int, visitor: Me
             mv.visitVarInsn(ALOAD, returnLocal)
             mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
             mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
-            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
             mv.visitInsn(POP)
         }
         mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCast)
+        mv.visitLdcInsn(properties.tagCost)
         mv.visitLdcInsn(Log.SQUARE_BOTTOM)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCast, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
     }
 

@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.reflect.Method;
-
 /**
  * @author : iwdael
  * @mail : iwdael@outlook.com
@@ -16,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MethodStatic.call1234(10, 30);
-        new MethodTest1().test2("123", 100);
+        JavaTest.test();
+        JavaTextException.test();
     }
 }

@@ -22,14 +22,9 @@ interface InstrumentationProperty : InstrumentationParameters {
     @get:Input
     val sourceDir: Property<String>
 
-
     @get:Internal
     @get:Input
-    val classChainMatcher: Property<String>
-
-    @get:Internal
-    @get:Input
-    val classCastMatcher: Property<String>
+    val classMatcher: Property<String>
 
     @get:Internal
     @get:Input
@@ -37,7 +32,7 @@ interface InstrumentationProperty : InstrumentationParameters {
 
     @get:Internal
     @get:Input
-    val methodCastMatcher: Property<String>
+    val methodCostMatcher: Property<String>
 
     @get:Internal
     @get:Input
@@ -49,11 +44,11 @@ interface InstrumentationProperty : InstrumentationParameters {
 
     @get:Internal
     @get:Input
-    val tagCast: Property<String>
+    val tagCost: Property<String>
 
     @get:Internal
     @get:Input
-    val levelCast: Property<String>
+    val levelCost: Property<String>
 
     @get:Internal
     @get:Input
@@ -61,7 +56,11 @@ interface InstrumentationProperty : InstrumentationParameters {
 
     @get:Internal
     @get:Input
-    val enableCast: Property<Boolean>
+    val enableCost: Property<Boolean>
+
+    @get:Internal
+    @get:Input
+    val useEnglish: Property<Boolean>
 
 
 }

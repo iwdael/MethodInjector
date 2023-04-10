@@ -15,16 +15,16 @@ import java.io.File
 fun InstrumentationProperty.toProperty(): Properties {
     val properties = Properties(null)
     properties.sourceDir = sourceDir.get()
-    properties.classChainMatcher = classChainMatcher.get()
+    properties.classMatcher = classMatcher.get()
     properties.methodChainMatcher = methodChainMatcher.get()
-    properties.classCastMatcher = classCastMatcher.get()
-    properties.methodCastMatcher = methodCastMatcher.get()
+    properties.methodCostMatcher = methodCostMatcher.get()
     properties.tagChain = tagChain.get()
-    properties.tagCast = tagCast.get()
+    properties.tagCost = tagCost.get()
     properties.enableChain = enableChain.get()
-    properties.enableCast = enableCast.get()
+    properties.enableCost = enableCost.get()
     properties.levelChain = checkLevel(levelChain.get())
-    properties.levelCast = checkLevel(levelCast.get())
+    properties.levelCost = checkLevel(levelCost.get())
+    properties.useEnglish = useEnglish.get()
     return properties
 }
 

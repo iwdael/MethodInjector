@@ -12,6 +12,8 @@ import com.iwdael.methodinjector.constant.Method.C_HASH_CODE
 import com.iwdael.methodinjector.constant.Method.C_INIT
 import com.iwdael.methodinjector.constant.Method.C_TO_STRING
 import com.iwdael.methodinjector.properties.Properties
+import com.iwdael.methodinjector.utils.Logger
+import com.iwdael.methodinjector.utils.appendDescriptor
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import java.io.File
@@ -43,12 +45,12 @@ class ChainInjector constructor(classContext: ClassContext, api: Int, visitor: M
         argumentTypes.forEachIndexed { index, type ->
             if (index == 0) {
                 loadArg(0)
-                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${getTypeDescriptor(type)})Ljava/lang/StringBuilder;", false)
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${type.appendDescriptor})Ljava/lang/StringBuilder;", false)
             } else {
                 mv.visitLdcInsn(" arg${index}:")
                 mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
                 loadArg(index)
-                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${getTypeDescriptor(type)})Ljava/lang/StringBuilder;", false)
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${type.appendDescriptor})Ljava/lang/StringBuilder;", false)
             }
         }
         if (isStatic) {

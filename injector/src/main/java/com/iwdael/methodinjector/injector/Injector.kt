@@ -1,12 +1,10 @@
 package com.iwdael.methodinjector.injector
 
 import com.android.build.api.instrumentation.ClassContext
-import com.iwdael.methodinjector.constant.Method
 import com.iwdael.methodinjector.properties.Properties
 import com.iwdael.methodinjector.utils.Logger
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Type
 import org.objectweb.asm.commons.AdviceAdapter
 import java.io.File
 
@@ -28,12 +26,12 @@ open class Injector(classContext: ClassContext, api: Int, methodVisitor: MethodV
     private var isReceivedLineNumber = false
 
     override fun visitLineNumber(line: Int, start: Label?) {
-        super.visitLineNumber(line, start)
-        lineNumber = line - 1
         if (!isReceivedLineNumber) {
             isReceivedLineNumber = true
+            lineNumber = line - 1
             onMethodEnter2()
         }
+        super.visitLineNumber(line, start)
     }
 
     override fun visitLocalVariable(name: String?, descriptor: String?, signature: String?, start: Label?, end: Label?, index: Int) {
@@ -41,39 +39,6 @@ open class Injector(classContext: ClassContext, api: Int, methodVisitor: MethodV
         if (index < parameterNames.size) parameterNames[index] = name
     }
 
-    open fun onMethodEnter2() {
+    open fun onMethodEnter2() {}
 
-    }
-
-    override fun onMethodEnter() {
-        super.onMethodEnter()
-        Logger.log("method:${name}")
-    }
-protected fun getTypeDescriptor(type: Type): String {
-    return when (type) {
-        Method.TYPE.STRING,
-        Method.TYPE.STRING_BUFFER,
-        Method.TYPE.CHAR_SEQUENCE,
-        Method.TYPE.CHAR_ARRAY,
-        Method.TYPE.BOOLEAN,
-        Method.TYPE.CHAR,
-        Method.TYPE.INT,
-        Method.TYPE.LONG,
-        Method.TYPE.FLOAT,
-        Method.TYPE.DOUBLE -> type
-        else -> Method.TYPE.OBJECT
-    }.descriptor
-}
-protected fun getReturnStringValueOfDescriptor(type: Type): String {
-    return when (type) {
-        Method.TYPE.CHAR_ARRAY,
-        Method.TYPE.BOOLEAN,
-        Method.TYPE.CHAR,
-        Method.TYPE.INT,
-        Method.TYPE.LONG,
-        Method.TYPE.FLOAT,
-        Method.TYPE.DOUBLE -> type
-        else -> Method.TYPE.OBJECT
-    }.descriptor
-}
 }
