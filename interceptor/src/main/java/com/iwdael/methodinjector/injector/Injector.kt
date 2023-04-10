@@ -49,27 +49,31 @@ open class Injector(classContext: ClassContext, api: Int, methodVisitor: MethodV
         super.onMethodEnter()
         Logger.log("method:${name}")
     }
-
-
-    protected fun getTypeDescriptor(type: Type): String {
-        return when (type) {
-            Method.TYPE.STRING,
-            Method.TYPE.STRING_BUFFER,
-            Method.TYPE.CHAR_SEQUENCE,
-            Method.TYPE.CHAR_ARRAY,
-            Method.TYPE.BOOLEAN,
-            Method.TYPE.BOOLEAN_BOX,
-            Method.TYPE.CHAR,
-            Method.TYPE.CHAR_BOX,
-            Method.TYPE.INT,
-            Method.TYPE.INT_BOX,
-            Method.TYPE.LONG,
-            Method.TYPE.LONG_BOX,
-            Method.TYPE.FLOAT,
-            Method.TYPE.FLOAT_BOX,
-            Method.TYPE.DOUBLE,
-            Method.TYPE.DOUBLE_BOX -> type
-            else -> Method.TYPE.OBJECT
-        }.descriptor
-    }
+protected fun getTypeDescriptor(type: Type): String {
+    return when (type) {
+        Method.TYPE.STRING,
+        Method.TYPE.STRING_BUFFER,
+        Method.TYPE.CHAR_SEQUENCE,
+        Method.TYPE.CHAR_ARRAY,
+        Method.TYPE.BOOLEAN,
+        Method.TYPE.CHAR,
+        Method.TYPE.INT,
+        Method.TYPE.LONG,
+        Method.TYPE.FLOAT,
+        Method.TYPE.DOUBLE -> type
+        else -> Method.TYPE.OBJECT
+    }.descriptor
+}
+protected fun getReturnStringValueOfDescriptor(type: Type): String {
+    return when (type) {
+        Method.TYPE.CHAR_ARRAY,
+        Method.TYPE.BOOLEAN,
+        Method.TYPE.CHAR,
+        Method.TYPE.INT,
+        Method.TYPE.LONG,
+        Method.TYPE.FLOAT,
+        Method.TYPE.DOUBLE -> type
+        else -> Method.TYPE.OBJECT
+    }.descriptor
+}
 }
