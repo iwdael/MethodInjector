@@ -78,23 +78,23 @@ class CostInjector constructor(classContext: ClassContext, api: Int, visitor: Me
         mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.CLASS))}: $className")
         mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
         mv.visitInsn(POP)
+        if (!properties.simpleCost) {
+            mv.visitLabel(Label())
+            mv.visitLdcInsn(properties.tagCost)
+            mv.visitTypeInsn(NEW, C_STRING_BUILDER)
+            mv.visitInsn(DUP)
+            mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
+            mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.THREAD))}: ")
+            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+            mv.visitMethodInsn(INVOKESTATIC, C_THREAD, C_CURRENT_THREAD, "()Ljava/lang/Thread;", false)
+            mv.visitMethodInsn(INVOKEVIRTUAL, C_THREAD, C_GET_NAME, "()Ljava/lang/String;", false)
+            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitInsn(POP)
+        }
 
-        mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagCost)
-        mv.visitTypeInsn(NEW, C_STRING_BUILDER)
-        mv.visitInsn(DUP)
-        mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
-        mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.THREAD))}: ")
-        mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
-        mv.visitMethodInsn(INVOKESTATIC, C_THREAD, C_CURRENT_THREAD, "()Ljava/lang/Thread;", false)
-        mv.visitMethodInsn(INVOKEVIRTUAL, C_THREAD, C_GET_NAME, "()Ljava/lang/String;", false)
-        mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
-        mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelCost, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-        mv.visitInsn(POP)
-
-
-        if (!isStatic && name != "<init>" && name != "<clinit>") {
+        if (!isStatic && name != "<init>" && name != "<clinit>" && !properties.simpleCost) {
             mv.visitLdcInsn(properties.tagCost)
             mv.visitTypeInsn(NEW, C_STRING_BUILDER)
             mv.visitInsn(DUP)

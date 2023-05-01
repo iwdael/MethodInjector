@@ -85,6 +85,14 @@ interface InstrumentationProperty : InstrumentationParameters {
 
     @get:Internal
     @get:Input
+    val simpleChain: Property<Boolean>
+
+    @get:Internal
+    @get:Input
+    val simpleCost: Property<Boolean>
+
+    @get:Internal
+    @get:Input
     val enableCost: Property<Boolean>
 
     @get:Internal

@@ -48,6 +48,8 @@ class MethodInjector : Plugin<Project> {
                 params.levelChain.set(properties.levelChain)
                 params.tagCost.set(properties.tagCost)
                 params.levelCost.set(properties.levelCost)
+                params.simpleChain.set(properties.simpleChain)
+                params.simpleCost.set(properties.simpleCost)
                 params.enableChain.set(properties.enableChain)
                 params.enableCost.set(properties.enableCost)
                 params.useEnglish.set(properties.useEnglish)
