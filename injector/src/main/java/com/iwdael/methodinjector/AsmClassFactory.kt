@@ -21,7 +21,7 @@ abstract class AsmClassFactory : AsmClassVisitorFactory<InstrumentationProperty>
 
     override fun isInstrumentable(classData: ClassData): Boolean {
         return classData.className.matcher(parameters.get().classMatcher.get())
-                && !classData.className.unMatcher(parameters.get().classUnMatcher.get())
+                && !classData.className.matcher2(parameters.get().classUnMatcher.get())
 
     }
 

@@ -28,10 +28,10 @@ class ChainInjector(classContext: ClassContext, api: Int, visitor: MethodVisitor
 
     override fun intercept(): Boolean {
         if (!properties.enableChain) return false
-        return methodName.matcher(properties.methodChainInternalMatcher) &&
-                methodName.matcher(properties.methodChainMatcher) &&
-                !methodName.unMatcher(properties.methodChainInternalUnMatcher) &&
-                !methodName.unMatcher(properties.methodChainUnMatcher) &&
+        return name.matcher(properties.methodChainInternalMatcher) &&
+                name.matcher(properties.methodChainMatcher) &&
+                !name.matcher2(properties.methodChainInternalUnMatcher) &&
+                !name.matcher2(properties.methodChainUnMatcher) &&
                 (method.argc == method.args.size).apply { if (!this) Logger.error("method:${methodName} args:${method.args}") }
     }
 

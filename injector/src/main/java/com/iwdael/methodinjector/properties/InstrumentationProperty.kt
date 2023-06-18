@@ -24,44 +24,44 @@ interface InstrumentationProperty : InstrumentationParameters {
 
     @get:Internal
     @get:Input
-    val classMatcher: Property<String>
+    val classMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val classUnMatcher: Property<String>
+    val classUnMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val methodChainMatcher: Property<String>
+    val methodChainMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val methodChainInternalMatcher: Property<String>
+    val methodChainInternalMatcher: Property<Any>
 
 
     @get:Internal
     @get:Input
-    val methodChainUnMatcher: Property<String>
+    val methodChainUnMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val methodChainInternalUnMatcher: Property<String>
+    val methodChainInternalUnMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val methodCostMatcher: Property<String>
+    val methodCostMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val methodCostUnMatcher: Property<String>
+    val methodCostUnMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val methodCostInternalMatcher: Property<String>
+    val methodCostInternalMatcher: Property<Any>
 
     @get:Internal
     @get:Input
-    val methodCostInternalUnMatcher: Property<String>
+    val methodCostInternalUnMatcher: Property<Any>
 
     @get:Internal
     @get:Input

@@ -33,10 +33,10 @@ class CostInjector constructor(classContext: ClassContext, api: Int, visitor: Me
 
     override fun intercept(): Boolean {
         if (!properties.enableCost) return false
-        return methodName.matcher(properties.methodCostInternalMatcher) &&
-                methodName.matcher(properties.methodCostMatcher) &&
-                !methodName.unMatcher(properties.methodCostInternalUnMatcher) &&
-                !methodName.unMatcher(properties.methodCostUnMatcher) &&
+        return name.matcher(properties.methodCostInternalMatcher) &&
+                name.matcher(properties.methodCostMatcher) &&
+                !name.matcher2(properties.methodCostInternalUnMatcher) &&
+                !name.matcher2(properties.methodCostUnMatcher) &&
                 (method.argc == method.args.size).apply { if (!this) Logger.error("method:${methodName} args:${method.args}") }
     }
 
