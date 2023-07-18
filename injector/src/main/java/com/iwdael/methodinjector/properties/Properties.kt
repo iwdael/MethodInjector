@@ -26,8 +26,8 @@ open class Properties constructor(project: Project?) {
     var tagCost: String = "method-injector"
     var levelChain: String = "debug"
     var levelCost: String = "debug"
-    var simpleChain = true
-    var simpleCost = true
+    var simpleChain = false
+    var simpleCost = false
     var enableChain = true
     var enableCost = true
     var useEnglish = true

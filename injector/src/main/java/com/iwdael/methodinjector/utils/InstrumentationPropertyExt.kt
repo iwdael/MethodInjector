@@ -33,6 +33,8 @@ fun InstrumentationProperty.toProperty(): Properties {
     properties.tagCost = tagCost.get()
     properties.enableChain = enableChain.get()
     properties.enableCost = enableCost.get()
+    properties.simpleChain = simpleChain.get()
+    properties.simpleCost = simpleCost.get()
     properties.levelChain = checkLevel(levelChain.get())
     properties.levelCost = checkLevel(levelCost.get())
     properties.useEnglish = useEnglish.get()

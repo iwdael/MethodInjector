@@ -37,24 +37,29 @@ class ChainInjector(classContext: ClassContext, api: Int, visitor: MethodVisitor
 
     override fun onMethodEnter() {
         if (!intercept()) return
+        if (properties.simpleChain) {
+            mv.visitLabel(Label())
+            mv.visitLdcInsn(properties.tagChain)
+            mv.visitLdcInsn("${name}(${fileName}:${method.lineNumber})")
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitInsn(POP)
+        } else {
+            val attrOffset = Language.offset(properties.useEnglish, method)
+            val header = "%-${attrOffset}s"
 
-        val attrOffset = Language.offset(properties.useEnglish, method)
-        val header = "%-${attrOffset}s"
-
-        mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagChain)
-        mv.visitLdcInsn(Log.SQUARE_TOP)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-        mv.visitInsn(POP)
+            mv.visitLabel(Label())
+            mv.visitLdcInsn(properties.tagChain)
+            mv.visitLdcInsn(Log.SQUARE_TOP)
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitInsn(POP)
 
 
-        mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagChain)
-        mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.CLASS))}: $className")
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-        mv.visitInsn(POP)
+            mv.visitLabel(Label())
+            mv.visitLdcInsn(properties.tagChain)
+            mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.CLASS))}: $className")
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitInsn(POP)
 
-        if (!properties.simpleChain) {
             mv.visitLabel(Label())
             mv.visitLdcInsn(properties.tagChain)
             mv.visitTypeInsn(NEW, C_STRING_BUILDER)
@@ -68,63 +73,64 @@ class ChainInjector(classContext: ClassContext, api: Int, visitor: MethodVisitor
             mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
             mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
             mv.visitInsn(POP)
-        }
-
-        if (!isStatic && name != "<init>" && name != "<clinit>" && !properties.simpleChain) {
-            mv.visitLdcInsn(properties.tagChain)
-            mv.visitTypeInsn(NEW, C_STRING_BUILDER)
-            mv.visitInsn(DUP)
-            mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
-            mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.HASHCODE))}: ")
-            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
-            loadThis()
-            mv.visitMethodInsn(INVOKEVIRTUAL, Class.C_OBJECT, C_HASH_CODE, "()I", false)
-            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(I)Ljava/lang/StringBuilder;", false)
-            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
-            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-            mv.visitInsn(POP)
-        }
 
 
-        mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagChain)
-        mv.visitLdcInsn(Log.SQUARE_MIDDLE)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-        mv.visitInsn(POP)
-
-        mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagChain)
-        mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.METHOD))}: ${name}(${fileName}:${method.lineNumber})")
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-        mv.visitInsn(POP)
-
-
-        mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagChain)
-        mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.DESCRIPTOR))}: $descriptor")
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-        mv.visitInsn(POP)
+            if (!isStatic && name != "<init>" && name != "<clinit>" && !properties.simpleChain) {
+                mv.visitLdcInsn(properties.tagChain)
+                mv.visitTypeInsn(NEW, C_STRING_BUILDER)
+                mv.visitInsn(DUP)
+                mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
+                mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.HASHCODE))}: ")
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+                loadThis()
+                mv.visitMethodInsn(INVOKEVIRTUAL, Class.C_OBJECT, C_HASH_CODE, "()I", false)
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(I)Ljava/lang/StringBuilder;", false)
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
+                mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+                mv.visitInsn(POP)
+            }
 
 
-        method.args.forEachIndexed { index, arg ->
             mv.visitLabel(Label())
             mv.visitLdcInsn(properties.tagChain)
-            mv.visitTypeInsn(NEW, C_STRING_BUILDER)
-            mv.visitInsn(DUP)
-            mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
-            mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, (Language.get(properties.useEnglish, Language.ARG) + "[" + arg + "]"))}: ")
-            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
-            loadArg(index)
-            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${argumentTypes[index].appendDescriptor})Ljava/lang/StringBuilder;", false)
-            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
+            mv.visitLdcInsn(Log.SQUARE_MIDDLE)
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitInsn(POP)
+
+            mv.visitLabel(Label())
+            mv.visitLdcInsn(properties.tagChain)
+            mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.METHOD))}: ${name}(${fileName}:${method.lineNumber})")
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitInsn(POP)
+
+
+            mv.visitLabel(Label())
+            mv.visitLdcInsn(properties.tagChain)
+            mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, Language.get(properties.useEnglish, Language.DESCRIPTOR))}: $descriptor")
+            mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+            mv.visitInsn(POP)
+
+
+            method.args.forEachIndexed { index, arg ->
+                mv.visitLabel(Label())
+                mv.visitLdcInsn(properties.tagChain)
+                mv.visitTypeInsn(NEW, C_STRING_BUILDER)
+                mv.visitInsn(DUP)
+                mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
+                mv.visitLdcInsn("${Log.SQUARE_LEFT} ${String.format(header, (Language.get(properties.useEnglish, Language.ARG) + "[" + arg + "]"))}: ")
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+                loadArg(index)
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${argumentTypes[index].appendDescriptor})Ljava/lang/StringBuilder;", false)
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
+                mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
+                mv.visitInsn(POP)
+            }
+
+            mv.visitLabel(Label())
+            mv.visitLdcInsn(properties.tagChain)
+            mv.visitLdcInsn(Log.SQUARE_BOTTOM)
             mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
             mv.visitInsn(POP)
         }
-
-        mv.visitLabel(Label())
-        mv.visitLdcInsn(properties.tagChain)
-        mv.visitLdcInsn(Log.SQUARE_BOTTOM)
-        mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
-        mv.visitInsn(POP)
     }
 }
