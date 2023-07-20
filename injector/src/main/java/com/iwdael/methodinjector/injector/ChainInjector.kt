@@ -40,9 +40,25 @@ class ChainInjector(classContext: ClassContext, api: Int, visitor: MethodVisitor
         if (properties.simpleChain) {
             mv.visitLabel(Label())
             mv.visitLdcInsn(properties.tagChain)
+            mv.visitTypeInsn(NEW, C_STRING_BUILDER)
+            mv.visitInsn(DUP)
+            mv.visitMethodInsn(INVOKESPECIAL, C_STRING_BUILDER, C_INIT, "()V", false)
             mv.visitLdcInsn("${name}(${fileName}:${method.lineNumber})")
+            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+            method.args.forEachIndexed { index, arg ->
+                if (index>0) {
+                    mv.visitLdcInsn(",")
+                    mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+                }
+                mv.visitLdcInsn(" ${arg}: ")
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+                loadArg(index)
+                mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_APPEND, "(${argumentTypes[index].appendDescriptor})Ljava/lang/StringBuilder;", false)
+            }
+            mv.visitMethodInsn(INVOKEVIRTUAL, C_STRING_BUILDER, C_TO_STRING, "()Ljava/lang/String;", false)
             mv.visitMethodInsn(INVOKESTATIC, C_LOG, properties.levelChain, "(Ljava/lang/String;Ljava/lang/String;)I", false)
             mv.visitInsn(POP)
+
         } else {
             val attrOffset = Language.offset(properties.useEnglish, method)
             val header = "%-${attrOffset}s"
